@@ -95,7 +95,7 @@ var message = function () {
           text[0][Math.floor(Math.random() * text[0].length)]
         )
       );
-      span.className = "fake";
+      span.className = "faux";
     } else
       span.appendChild(
         document.createTextNode(
