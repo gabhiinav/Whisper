@@ -113,7 +113,7 @@ const message = function () {
 
   setTimeout(function () {
     requestAnimationFrame(message);
-  }, ((Math.random() * spanHeight) / document.body.clientHeight) * 50000);
+  }, ((Math.random() * spanHeight) / document.body.clientHeight) * 25000);
 };
 
 const scroll = function () {
