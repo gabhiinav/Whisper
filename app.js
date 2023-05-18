@@ -6,7 +6,6 @@ var text = [
     "I'm good.",
     "I'm fine, really. Just a little overwhelmed.",
     "It's just one of those days.",
-    "I need help.",
   ],
   [
     "Everything is awful.",
@@ -85,61 +84,52 @@ var text = [
   ],
 ];
 
-var message = function () {
-    var span = document.createElement("span"),
-      speed = Math.ceil(Math.random() * 4);
+const message = function () {
+  const span = document.createElement("span");
+  const speed = Math.ceil(Math.random() * 4);
+  const isFaux = Math.random() < 0.01;
+  const textIndex = isFaux ? 0 : 1;
+  const randomIndex = Math.floor(Math.random() * text[textIndex].length);
 
-    if (Math.random() < 0.01) {
-      span.appendChild(
-        document.createTextNode(
-          text[0][Math.floor(Math.random() * text[0].length)]
-        )
-      );
-      span.className = "faux";
-    } else
-      span.appendChild(
-        document.createTextNode(
-          text[1][Math.floor(Math.random() * text[1].length)]
-        )
-      );
-    document.body.appendChild(span);
+  span.appendChild(document.createTextNode(text[textIndex][randomIndex]));
+  span.className = isFaux ? "faux" : "";
+  document.body.appendChild(span);
 
-    span.style.left = document.body.clientWidth + "px";
-    span.style.top =
-      Math.floor(
-        Math.random() * (document.body.clientHeight - span.clientHeight)
-      ) + "px";
-    spans[speed].push(span);
+  const spanWidth = span.clientWidth;
+  const spanHeight = span.clientHeight;
 
-    setTimeout(
-      function () {
-        requestAnimationFrame(message);
-      },
+  span.style.left = document.body.clientWidth + "px";
+  span.style.top =
+    Math.floor(Math.random() * (document.body.clientHeight - spanHeight)) +
+    "px";
+  spans[speed].push(span);
 
-      ((Math.random() * span.clientHeight) / document.body.clientHeight) * 50000
-    );
-  },
-  scroll = function () {
-    requestAnimationFrame(scroll);
+  setTimeout(function () {
+    requestAnimationFrame(message);
+  }, ((Math.random() * spanHeight) / document.body.clientHeight) * 50000);
+};
 
-    for (var speed = 1; speed < spans.length; speed++) {
-      for (var x = 0; x < spans[speed].length; x++) {
-        var left = parseInt(spans[speed][x].style.left, 10) - speed;
-        spans[speed][x].style.left = left + "px";
+const scroll = function () {
+  requestAnimationFrame(scroll);
+  const bodyClientWidth = document.body.clientWidth;
+  const bodyClientHeight = document.body.clientHeight;
 
-        if (left == -1 * spans[speed][x].clientWidth) {
-          document.body.removeChild(spans[speed][x]);
+  for (let speed = 1; speed < spans.length; speed++) {
+    for (let x = 0; x < spans[speed].length; x++) {
+      const currentSpan = spans[speed][x];
+      let left = parseInt(currentSpan.style.left, 10) - speed;
+      currentSpan.style.left = left + "px";
 
-          for (y = x; y < spans[speed].length - 1; y++)
-            spans[speed][y] = spans[speed][y + 1];
-          spans[speed].pop();
-
-          if (x < spans[speed].length - 1) x--;
-        }
+      if (left <= -currentSpan.clientWidth) {
+        document.body.removeChild(currentSpan);
+        spans[speed].splice(x, 1);
+        x--;
       }
     }
-  },
-  spans = [null, [], [], [], []];
+  }
+};
+
+const spans = [null, [], [], [], []];
 
 message();
 scroll();
