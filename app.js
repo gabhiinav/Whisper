@@ -98,7 +98,14 @@ const message = function () {
   const spanWidth = span.clientWidth;
   const spanHeight = span.clientHeight;
 
-  span.style.left = document.body.clientWidth + "px";
+  const initialLeft =
+    document.body.clientWidth +
+    spans[speed].reduce((rightmost, span) => {
+      const spanRight = parseInt(span.style.left, 10) + span.clientWidth;
+      return Math.max(rightmost, spanRight);
+    }, 0);
+
+  span.style.left = initialLeft + "px";
   span.style.top =
     Math.floor(Math.random() * (document.body.clientHeight - spanHeight)) +
     "px";
